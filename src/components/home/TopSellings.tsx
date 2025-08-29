@@ -6,13 +6,13 @@ import { apiRequest } from "@/shared/api";
 import { getImageUrl } from "@/shared/utils/image";
 import Loading from "../common/Loading";
 
-interface NewArrivalsProps {
+interface TopSellingsProps {
   fetchCards?: boolean;
 }
 
-const NewArrivals: React.FC<NewArrivalsProps> = ({ fetchCards = true }) => {
+const TopSellings: React.FC<TopSellingsProps> = ({ fetchCards = true }) => {
   const [products, setProducts] = useState<any[]>([]);
-  const [heading, setHeading] = useState<string>("NEW ARRIVALS");
+  const [heading, setHeading] = useState<string>("top selling");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,22 +20,22 @@ const NewArrivals: React.FC<NewArrivalsProps> = ({ fetchCards = true }) => {
       try {
         // Dynamic endpoint
         const endpoint = fetchCards
-          ? "home-page?populate[newArrival][populate][card][populate]=image"
-          : "home-page?populate[newArrival][populate]=*";
+          ? "home-page?populate[topSelling][populate][card][populate]=image"
+          : "home-page?populate[topSelling][populate]=*";
 
         const data = await apiRequest<{ data: any }>(endpoint);
         console.log(data?.data, "products");
 
         // Dynamic heading field
         const apiHeading =
-          data?.data?.newArrival?.title ||
-          data?.data?.newArrival?.newArrivalHeading?.name ||
-          "NEW ARRIVALS";
+          data?.data?.topSelling?.title ||
+          data?.data?.topSelling?.heading?.name ||
+          "Top Selling";
         setHeading(apiHeading);
 
         // Only set products if cards are fetched
         if (fetchCards) {
-          const cards = data?.data?.newArrival?.card || [];
+          const cards = data?.data?.topSelling?.card || [];
           const processedProducts = cards.map((card: any, index: number) => ({
             id: card.id || index,
             image: card.image ? getImageUrl(card.image) : "/placeholder.png",
@@ -79,4 +79,4 @@ const NewArrivals: React.FC<NewArrivalsProps> = ({ fetchCards = true }) => {
   );
 };
 
-export default NewArrivals;
+export default TopSellings;
