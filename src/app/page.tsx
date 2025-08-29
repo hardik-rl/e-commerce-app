@@ -1,6 +1,7 @@
 import BrowseByStyle from "@/components/home/BrowseByStyle";
 import HeroBanner from "@/components/home/HeroBanner";
 import NewArrivals from "@/components/home/NewArrivals";
+import Testimonials from "@/components/home/Testimonials";
 import TopSellings from "@/components/home/TopSellings";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
       <NewArrivals />
       <TopSellings />
       <BrowseByStyle />
+      <Testimonials />
     </>
   );
 }
