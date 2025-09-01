@@ -2,6 +2,7 @@
 
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import Image from "next/image";
+import card from "../../assets/images/card.png";
 
 export default function Footer() {
   return (
@@ -74,11 +75,11 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 gap-4">
           <p>Shop.co © 2000-2023, All Rights Reserved</p>
           <div className="flex space-x-3">
-            <Image src="/images/visa.png" alt="Visa" width={40} height={25} />
-            <Image src="/images/mastercard.png" alt="Mastercard" width={40} height={25} />
+            <Image src={card} alt="Visa" width={355} height={255} objectFit="contain" />
+            {/* <Image src="/images/mastercard.png" alt="Mastercard" width={40} height={25} />
             <Image src="/images/paypal.png" alt="PayPal" width={40} height={25} />
             <Image src="/images/applepay.png" alt="Apple Pay" width={40} height={25} />
-            <Image src="/images/googlepay.png" alt="Google Pay" width={40} height={25} />
+            <Image src="/images/googlepay.png" alt="Google Pay" width={40} height={25} /> */}
           </div>
         </div>
       </div>
