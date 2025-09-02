@@ -1,31 +1,43 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
+import { useState } from "react";
 import { Mail } from "lucide-react";
 import { apiRequest } from "@/shared/api";
 
+const GET_NEWSLETTER = gql`
+  query GetNewsletter {
+    homePage {
+      newsLetter {
+        heading {
+          name
+        }
+        button {
+          Button
+        }
+      }
+    }
+  }
+`;
+
+interface NewsletterData {
+  homePage: {
+    newsLetter: {
+      heading: {
+        name: string;
+      };
+      button: {
+        Button: string;
+      };
+    };
+  };
+}
+
 export default function Newsletter() {
-  const [newsletterData, setNewsletterData] = useState<any>(null);
+  const { data, loading, error } = useQuery<NewsletterData>(GET_NEWSLETTER);
   const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    const fetchNewsletter = async () => {
-      try {
-        const res = await apiRequest<{ data: any }>(
-          "home-page?populate[newsLetter][populate]=*"
-        );
-        setNewsletterData(res.data.newsLetter);
-      } catch (error) {
-        console.error("Error fetching newsletter:", error);
-      }
-    };
-    fetchNewsletter();
-  }, []);
-
-  console.log(newsletterData, "newsletterData");
-  
-
-  // Handle Subscribe
+  // Handle Subscribe (still REST since Strapi mutations setup is optional)
   const handleSubscribe = async () => {
     if (!email) return alert("Please enter an email address");
 
@@ -48,11 +60,16 @@ export default function Newsletter() {
     }
   };
 
+  if (loading) return <p className="text-center">Loading newsletter...</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error.message}</p>;
+
+  const newsletterData = data?.homePage?.newsLetter;
+
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
       <div className="bg-black text-white rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 px-8 py-10">
         <h2 className="text-2xl md:text-3xl font-extrabold text-center md:text-left">
-          {newsletterData?.heading?.name}
+          {newsletterData?.heading?.name || "Subscribe to our Newsletter"}
         </h2>
 
         <div className="flex flex-col items-center gap-3 w-full md:w-auto">
@@ -71,7 +88,7 @@ export default function Newsletter() {
             onClick={handleSubscribe}
             className="bg-white text-black font-semibold px-6 py-3 rounded-full w-full hover:bg-gray-200 transition"
           >
-            {newsletterData?.button?.Button}
+            {newsletterData?.button?.Button || "Subscribe"}
           </button>
         </div>
       </div>
