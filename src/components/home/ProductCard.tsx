@@ -19,12 +19,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
   discount,
   rating,
 }) => {
-  // Generate star rating display
+  
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
-    
+
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(<span key={i} className="text-yellow-500">★</span>);
@@ -37,12 +37,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
     return stars;
   };
 
-  const imageUrl =
-    typeof image === "string"
-      ? (image.startsWith("http") ? image : `${process.env.NEXT_PUBLIC_API_URL}${image}`)
-      : image?.url
-        ? `${process.env.NEXT_PUBLIC_API_URL}${image.url}`
-        : "/placeholder.png";
+  const imageUrl = image?.url
+    ? `${process.env.NEXT_PUBLIC_API_URL}${image.url}`
+    : "/placeholder.png";
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 text-center">
