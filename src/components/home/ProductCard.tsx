@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
   id?: number;
@@ -12,6 +13,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
+  id,
   image,
   title,
   price,
@@ -42,7 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     : "/placeholder.png";
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-4 text-center">
+    <Link href={`/product/${id}`} className="bg-white rounded-2xl shadow-sm p-4 text-center">
       <div className="mb-4">
         {imageUrl ? (
           <Image
@@ -84,7 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </span>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 
