@@ -72,9 +72,9 @@ export default function NewArrivals() {
           <Loading message="No products found." />
         )}
       </div>
-        <div className="flex mx-auto justify-center mt-8">
-          <Button label="View More" variant="outline" />
-        </div>
+      <div className="flex mx-auto justify-center mt-8">
+        <Button label="View More" variant="outline" />
+      </div>
     </section>
   );
 }

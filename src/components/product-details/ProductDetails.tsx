@@ -3,10 +3,28 @@ import { useState } from "react";
 import Image from "next/image";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
+import ProductTabs from "./ProductTabs";
+import Button from "../common/Button";
+import AreYouLike from "./AreYouLike";
 
 const GET_ALL_PRODUCTS = gql`
   query GetAllProducts {
     products {
+    AreYouLike {
+    name
+      card {
+        id
+        image {
+          alternativeText
+          caption
+          url
+
+        }
+        price
+        rating
+        title
+      }
+     }
       productsDetails {
         id
         name
@@ -37,7 +55,6 @@ export default function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState("Large");
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-  const [activeTab, setActiveTab] = useState("reviews");
 
   const { data, loading, error } = useQuery(GET_ALL_PRODUCTS);
 
@@ -47,10 +64,9 @@ export default function ProductDetails() {
     return <p>Error loading products: {error.message}</p>;
   }
 
-const product = data?.products?.[0]?.productsDetails || {};
-const reviews = data?.products?.[0]?.reviewAndRating || [];
-
-  console.log(product, "product");
+  const product = data?.products?.[0]?.productsDetails || {};
+  const reviews = data?.products?.[0]?.reviewAndRating || [];
+  const areYouLikes = data?.products?.[0]?.AreYouLike || [];
 
   if (!product) return <p>No product found</p>;
 
@@ -144,8 +160,8 @@ const reviews = data?.products?.[0]?.reviewAndRating || [];
                 <button
                   key={size}
                   className={`px-5 py-2 rounded-full border ${selectedSize === size
-                      ? "bg-black text-white border-black"
-                      : "bg-gray-100 text-black border-gray-300"
+                    ? "bg-black text-white border-black"
+                    : "bg-gray-100 text-black border-gray-300"
                     }`}
                   onClick={() => setSelectedSize(size)}
                 >
@@ -172,63 +188,15 @@ const reviews = data?.products?.[0]?.reviewAndRating || [];
                 +
               </button>
             </div>
-            <button className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800">
-              Add to Cart
-            </button>
+            <Button label="Add to Cart" variant="black">
+
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="mt-10 border-t pt-6">
-        <div className="flex justify-center gap-10 font-medium text-gray-500">
-          {["Product Details", "Rating & Reviews", "FAQs"].map((tab) => (
-            <button
-              key={tab}
-              className={`pb-2 ${activeTab === tab.toLowerCase()
-                  ? "border-b-2 border-black text-black"
-                  : ""
-                }`}
-              onClick={() => setActiveTab(tab.toLowerCase())}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        <div className="mt-6 text-center text-gray-600">
-          {activeTab === "product details" && (
-            <p>📦 More product details go here.</p>
-          )}
-          {activeTab === "reviews" && (
-            <div className="space-y-6">
-              {reviews.length > 0 ? (
-                reviews.map((review: any) => (
-                  <div
-                    key={review.id}
-                    className="border-b pb-4 last:border-none last:pb-0"
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="font-semibold">{review.name}</p>
-                      <span className="text-sm text-gray-400">
-                        {new Date(review.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-yellow-500">
-                      {"⭐".repeat(Math.floor(review.rating || 0))}
-                      {"☆".repeat(5 - Math.floor(review.rating || 0))}
-                    </p>
-                    <p className="text-gray-600 mt-2">{review.description}</p>
-                  </div>
-                ))
-              ) : (
-                <p>No reviews yet.</p>
-              )}
-            </div>
-          )}
-          {activeTab === "faqs" && <p>❓ FAQs will be shown here.</p>}
-        </div>
-      </div>
+      <ProductTabs reviewsData={reviews} />
+      <AreYouLike areYouLikes={areYouLikes?.card} heading={areYouLikes?.name} loading={loading} />
     </section>
   );
 }
